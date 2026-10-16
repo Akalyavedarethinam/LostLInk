@@ -9,18 +9,14 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Ensure upload folder exists
-    # Create upload folder only in a writable location
-upload_folder = app.config['UPLOAD_FOLDER']
+    # Use a writable upload folder on Vercel
+    upload_folder = app.config['UPLOAD_FOLDER']
 
-if os.environ.get("VERCEL") and not os.access("/tmp", os.W_OK):
-    raise RuntimeError("Vercel temporary directory is not writable")
+    if os.environ.get("VERCEL"):
+        upload_folder = "/tmp/lostlink_uploads"
 
-if os.environ.get("VERCEL"):
-    upload_folder = "/tmp/lostlink_uploads"
-
-app.config['UPLOAD_FOLDER'] = upload_folder
-os.makedirs(upload_folder, exist_ok=True)
+    app.config['UPLOAD_FOLDER'] = upload_folder
+    os.makedirs(upload_folder, exist_ok=True)
 
     with app.app_context():
         init_db(app)
@@ -56,7 +52,7 @@ os.makedirs(upload_folder, exist_ok=True)
     return app
 
 
-# Vercel needs this Flask instance at the top level
+# Make Flask application available to Vercel
 app = create_app()
 
 
