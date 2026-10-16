@@ -10,7 +10,17 @@ def create_app():
     app.config.from_object(Config)
 
     # Ensure upload folder exists
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    # Create upload folder only in a writable location
+upload_folder = app.config['UPLOAD_FOLDER']
+
+if os.environ.get("VERCEL") and not os.access("/tmp", os.W_OK):
+    raise RuntimeError("Vercel temporary directory is not writable")
+
+if os.environ.get("VERCEL"):
+    upload_folder = "/tmp/lostlink_uploads"
+
+app.config['UPLOAD_FOLDER'] = upload_folder
+os.makedirs(upload_folder, exist_ok=True)
 
     with app.app_context():
         init_db(app)
