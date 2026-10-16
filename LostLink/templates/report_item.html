@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-{{ 'danger' if report_type == 'lost' else 'success' }} text-white text-center py-3">
+                <h4 class="mb-0">Report {{ report_type | capitalize }} Item</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Item Name <span class="text-danger">*</span></label>
+                            <input type="text" name="item_name" class="form-control" required placeholder="e.g., Black Leather Wallet">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Category <span class="text-danger">*</span></label>
+                            <select name="category" class="form-select" required>
+                                <option value="">Select Category...</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Documents">Documents</option>
+                                <option value="Accessories">Accessories</option>
+                                <option value="Books">Books</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Bags">Bags</option>
+                                <option value="Keys">Keys</option>
+                                <option value="ID Cards">ID Cards</option>
+                                <option value="Wallet">Wallet</option>
+                                <option value="Mobile Phone">Mobile Phone</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Location {{ 'Lost' if report_type == 'lost' else 'Found' }} <span class="text-danger">*</span></label>
+                            <input type="text" name="location" class="form-control" required placeholder="e.g., College Library">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Date {{ 'Lost' if report_type == 'lost' else 'Found' }} <span class="text-danger">*</span></label>
+                            <input type="date" name="date" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Description <span class="text-danger">*</span></label>
+                        <textarea name="description" class="form-control" rows="3" required placeholder="Provide details like color, brand, specific marks..."></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Image (Optional but recommended)</label>
+                        <input type="file" name="image" class="form-control" accept="image/png, image/jpeg, image/webp">
+                        <div class="form-text">Supported formats: JPG, PNG, WEBP. Max 16MB.</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-{{ 'danger' if report_type == 'lost' else 'success' }} w-100 py-2 fw-bold">Submit Report</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

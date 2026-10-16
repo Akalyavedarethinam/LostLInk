@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-body bg-light">
+                <form method="GET" class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label">Type</label>
+                        <select name="type" class="form-select">
+                            <option value="">All</option>
+                            <option value="lost" {% if request.args.get('type') == 'lost' %}selected{% endif %}>Lost Items</option>
+                            <option value="found" {% if request.args.get('type') == 'found' %}selected{% endif %}>Found Items</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="form-select">
+                            <option value="">All Categories</option>
+                            <option value="Electronics" {% if request.args.get('category') == 'Electronics' %}selected{% endif %}>Electronics</option>
+                            <option value="Documents" {% if request.args.get('category') == 'Documents' %}selected{% endif %}>Documents</option>
+                            <option value="Accessories" {% if request.args.get('category') == 'Accessories' %}selected{% endif %}>Accessories</option>
+                            <option value="Wallet" {% if request.args.get('category') == 'Wallet' %}selected{% endif %}>Wallet</option>
+                            <option value="Mobile Phone" {% if request.args.get('category') == 'Mobile Phone' %}selected{% endif %}>Mobile Phone</option>
+                            <option value="Keys" {% if request.args.get('category') == 'Keys' %}selected{% endif %}>Keys</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Search Keyword</label>
+                        <input type="text" name="keyword" class="form-control" placeholder="Item name, location..." value="{{ request.args.get('keyword', '') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Filter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for item in items %}
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0 item-card">
+            {% if item.image %}
+                <img src="{{ url_for('items.uploaded_file', filename=item.image) }}" class="card-img-top object-fit-cover" alt="Item Image" style="height: 200px;">
+            {% else %}
+                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center text-white" style="height: 200px;">
+                    <span class="fs-1">📷</span>
+                </div>
+            {% endif %}
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="badge bg-{{ 'danger' if item.type == 'lost' else 'success' }} text-uppercase">{{ item.type }}</span>
+                    <span class="badge bg-secondary">{{ item.category }}</span>
+                </div>
+                <h5 class="card-title text-truncate">{{ item.item_name }}</h5>
+                <p class="card-text small text-muted mb-1"><i class="bi bi-geo-alt"></i> {{ item.location }}</p>
+                <p class="card-text small text-muted"><i class="bi bi-calendar"></i> {{ item.date }}</p>
+                <p class="card-text text-truncate">{{ item.description }}</p>
+            </div>
+            <div class="card-footer bg-white border-top-0">
+                <a href="{{ url_for('items.item_details', item_id=item._id) }}" class="btn btn-outline-primary w-100">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center py-5">
+        <h4 class="text-muted">No items found matching your criteria.</h4>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

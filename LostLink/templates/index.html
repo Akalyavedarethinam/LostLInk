@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row align-items-center py-5">
+    <div class="col-md-6">
+        <h1 class="display-4 fw-bold text-primary mb-3">Lost Something? Find It Faster.</h1>
+        <p class="lead text-muted mb-4">LostLink intelligently connects lost and found items using smart matching algorithms. Don't rely on notice boards anymore.</p>
+        <div class="d-flex gap-3">
+            <a href="{{ url_for('items.report_lost') }}" class="btn btn-danger btn-lg px-4">Report Lost Item</a>
+            <a href="{{ url_for('items.report_found') }}" class="btn btn-success btn-lg px-4">Report Found Item</a>
+        </div>
+    </div>
+    <div class="col-md-6 mt-4 mt-md-0 text-center">
+        <img src="https://via.placeholder.com/500x350.png?text=LostLink+Illustration" alt="Lost and Found" class="img-fluid rounded shadow-sm">
+    </div>
+</div>
+
+<div class="row mt-5 text-center g-4">
+    <div class="col-md-3">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h3 class="text-danger mb-3">🔍</h3>
+                <h5 class="card-title fw-bold">Report Lost Items</h5>
+                <p class="card-text text-muted">Quickly submit details and photos of items you have lost.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h3 class="text-success mb-3">🤝</h3>
+                <h5 class="card-title fw-bold">Report Found Items</h5>
+                <p class="card-text text-muted">Help others by reporting items you have found on campus.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h3 class="text-primary mb-3">🧠</h3>
+                <h5 class="card-title fw-bold">Intelligent Matching</h5>
+                <p class="card-text text-muted">Our algorithm automatically matches lost items with found items.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h3 class="text-warning mb-3">🔔</h3>
+                <h5 class="card-title fw-bold">Match Notifications</h5>
+                <p class="card-text text-muted">Get instant alerts when a high-probability match is found.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

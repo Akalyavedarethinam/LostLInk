@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-5">
+    <h2 class="fw-bold">Potential Match Details</h2>
+    <p class="text-muted">Review the details to see if these items match.</p>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-5">
+        <div class="card shadow-sm border-danger h-100">
+            <div class="card-header bg-danger text-white text-center fw-bold">LOST ITEM</div>
+            <div class="card-body">
+                {% if lost_item.image %}
+                    <img src="{{ url_for('items.uploaded_file', filename=lost_item.image) }}" class="img-fluid rounded mb-3 w-100 object-fit-cover" style="height: 250px;">
+                {% endif %}
+                <h4>{{ lost_item.item_name }}</h4>
+                <p><strong>Category:</strong> {{ lost_item.category }}</p>
+                <p><strong>Location:</strong> {{ lost_item.location }}</p>
+                <p><strong>Date:</strong> {{ lost_item.date }}</p>
+                <p><strong>Description:</strong> {{ lost_item.description }}</p>
+            </div>
+            <div class="card-footer bg-white text-center">
+                <a href="{{ url_for('items.item_details', item_id=lost_item._id) }}" class="btn btn-outline-danger btn-sm">View Full Lost Report</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-2 d-flex flex-column justify-content-center align-items-center">
+        <div class="text-center p-3 rounded bg-light border shadow-sm w-100">
+            <h5 class="text-primary fw-bold mb-1">SCORE</h5>
+            <h1 class="display-4 fw-bold text-primary mb-0">{{ match.match_score }}%</h1>
+            <span class="badge bg-primary mt-2">{{ match.match_level }}</span>
+        </div>
+        
+        <div class="w-100 mt-4">
+            <div class="mb-2">
+                <div class="d-flex justify-content-between small text-muted"><span>Name</span><span>{{ match.breakdown.name }}%</span></div>
+                <div class="progress" style="height: 6px;"><div class="progress-bar" style="width: {{ match.breakdown.name }}%"></div></div>
+            </div>
+            <div class="mb-2">
+                <div class="d-flex justify-content-between small text-muted"><span>Category</span><span>{{ match.breakdown.category }}%</span></div>
+                <div class="progress" style="height: 6px;"><div class="progress-bar bg-success" style="width: {{ match.breakdown.category }}%"></div></div>
+            </div>
+            <div class="mb-2">
+                <div class="d-flex justify-content-between small text-muted"><span>Location</span><span>{{ match.breakdown.location }}%</span></div>
+                <div class="progress" style="height: 6px;"><div class="progress-bar bg-warning" style="width: {{ match.breakdown.location }}%"></div></div>
+            </div>
+            <div class="mb-2">
+                <div class="d-flex justify-content-between small text-muted"><span>Date</span><span>{{ match.breakdown.date }}%</span></div>
+                <div class="progress" style="height: 6px;"><div class="progress-bar bg-info" style="width: {{ match.breakdown.date }}%"></div></div>
+            </div>
+            <div class="mb-2">
+                <div class="d-flex justify-content-between small text-muted"><span>Description</span><span>{{ match.breakdown.description }}%</span></div>
+                <div class="progress" style="height: 6px;"><div class="progress-bar bg-secondary" style="width: {{ match.breakdown.description }}%"></div></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-5">
+        <div class="card shadow-sm border-success h-100">
+            <div class="card-header bg-success text-white text-center fw-bold">FOUND ITEM</div>
+            <div class="card-body">
+                {% if found_item.image %}
+                    <img src="{{ url_for('items.uploaded_file', filename=found_item.image) }}" class="img-fluid rounded mb-3 w-100 object-fit-cover" style="height: 250px;">
+                {% endif %}
+                <h4>{{ found_item.item_name }}</h4>
+                <p><strong>Category:</strong> {{ found_item.category }}</p>
+                <p><strong>Location:</strong> {{ found_item.location }}</p>
+                <p><strong>Date:</strong> {{ found_item.date }}</p>
+                <p><strong>Description:</strong> {{ found_item.description }}</p>
+            </div>
+            <div class="card-footer bg-white text-center">
+                <a href="{{ url_for('items.item_details', item_id=found_item._id) }}" class="btn btn-outline-success btn-sm">View Full Found Report</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        {% if match.status == 'pending' and session.get('user_id') == lost_item.user_id|string %}
+            <div class="alert alert-warning">Is this your item? Claim it to notify the finder.</div>
+            <a href="{{ url_for('claims.claim_item', match_id=match._id) }}" class="btn btn-primary btn-lg px-5">Claim Item</a>
+        {% elif match.status == 'claimed' %}
+            <div class="alert alert-info border-info fw-bold">A claim has been submitted for this match and is pending review.</div>
+        {% elif match.status == 'recovered' %}
+            <div class="alert alert-success border-success fw-bold">This item has been successfully recovered!</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

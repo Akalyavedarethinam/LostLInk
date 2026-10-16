@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Review Claims</h2>
+<div class="card shadow-sm"><div class="card-body">
+    <table class="table table-hover">
+        <thead><tr><th>Claimant</th><th>Message</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for c in claims %}
+            <tr>
+                <td>{{ c.claimant.name }}</td><td>{{ c.message[:50] }}...</td>
+                <td><span class="badge bg-{% if c.status == 'pending' %}warning{% elif c.status == 'approved' %}success{% else %}danger{% endif %}">{{ c.status }}</span></td>
+                <td>{{ c.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <a href="{{ url_for('matches.match_details', match_id=c.match_id) }}" class="btn btn-sm btn-info">View Match</a>
+                    {% if c.status == 'pending' %}
+                        <a href="{{ url_for('admin.approve_claim', claim_id=c._id) }}" class="btn btn-sm btn-success" onclick="return confirm('Approve this claim? Items will be marked recovered.')">Approve</a>
+                        <a href="{{ url_for('admin.reject_claim', claim_id=c._id) }}" class="btn btn-sm btn-danger">Reject</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% endblock %}

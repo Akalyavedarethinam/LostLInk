@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">My Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-danger text-white shadow-sm">
+            <div class="card-body text-center">
+                <h3>{{ total_lost }}</h3>
+                <p class="mb-0">Lost Reports</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white shadow-sm">
+            <div class="card-body text-center">
+                <h3>{{ total_found }}</h3>
+                <p class="mb-0">Found Reports</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-primary text-white shadow-sm">
+            <div class="card-body text-center">
+                <h3>{{ matches|length }}</h3>
+                <p class="mb-0">Potential Matches</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white shadow-sm">
+            <div class="card-body text-center">
+                <h3>{{ recovered }}</h3>
+                <p class="mb-0">Items Recovered</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h4>Potential Matches</h4>
+        {% if matches %}
+            <div class="list-group">
+            {% for match in matches %}
+                <a href="{{ url_for('matches.match_details', match_id=match._id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-primary rounded-pill me-2">{{ match.match_score }}% Score</span>
+                        <strong>Match found!</strong> Lost: {{ match.lost_item.item_name }} | Found: {{ match.found_item.item_name }}
+                    </div>
+                    <span class="text-muted small">{{ match.created_at.strftime('%Y-%m-%d') }}</span>
+                </a>
+            {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted">No matches found yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <h4>My Lost Items</h4>
+        <div class="list-group">
+            {% for item in my_lost %}
+            <a href="{{ url_for('items.item_details', item_id=item._id) }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ item.item_name }}</h5>
+                    <small>{{ item.date }}</small>
+                </div>
+                <p class="mb-1">{{ item.location }}</p>
+                <small class="badge bg-{% if item.status == 'active' %}success{% elif item.status == 'recovered' %}info{% else %}secondary{% endif %}">
+                    {{ item.status | capitalize }}
+                </small>
+            </a>
+            {% else %}
+            <p class="text-muted">You haven't reported any lost items.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <h4>My Found Items</h4>
+        <div class="list-group">
+            {% for item in my_found %}
+            <a href="{{ url_for('items.item_details', item_id=item._id) }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ item.item_name }}</h5>
+                    <small>{{ item.date }}</small>
+                </div>
+                <p class="mb-1">{{ item.location }}</p>
+                <small class="badge bg-{% if item.status == 'active' %}success{% elif item.status == 'recovered' %}info{% else %}secondary{% endif %}">
+                    {{ item.status | capitalize }}
+                </small>
+            </a>
+            {% else %}
+            <p class="text-muted">You haven't reported any found items.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-5 mb-4">
+        {% if item.image %}
+            <img src="{{ url_for('items.uploaded_file', filename=item.image) }}" class="img-fluid rounded shadow-sm w-100 object-fit-cover" style="max-height: 400px;" alt="{{ item.item_name }}">
+        {% else %}
+            <div class="bg-secondary rounded shadow-sm d-flex align-items-center justify-content-center text-white" style="height: 400px;">
+                <span class="fs-1">No Image Provided</span>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-7">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge bg-{{ 'danger' if item.type == 'lost' else 'success' }} fs-6 px-3 py-2 text-uppercase">{{ item.type }} Item</span>
+            <span class="badge bg-secondary fs-6 px-3 py-2">{{ item.category }}</span>
+        </div>
+        
+        <h1 class="display-5 fw-bold mb-3">{{ item.item_name }}</h1>
+        
+        <div class="card bg-light border-0 mb-4">
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted fw-bold">Location</div>
+                    <div class="col-sm-8">{{ item.location }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted fw-bold">Date</div>
+                    <div class="col-sm-8">{{ item.date }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted fw-bold">Status</div>
+                    <div class="col-sm-8">
+                        <span class="badge bg-{% if item.status == 'active' %}success{% elif item.status == 'recovered' %}info{% else %}secondary{% endif %}">
+                            {{ item.status | capitalize }}
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 text-muted fw-bold">Reported By</div>
+                    <div class="col-sm-8">{{ reporter.name if reporter else 'Unknown' }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <h4 class="mb-3">Description</h4>
+        <p class="lead fs-6">{{ item.description }}</p>
+        
+        {% if session.get('user_id') and item.user_id|string == session.get('user_id') %}
+            <hr class="my-4">
+            <h4 class="mb-3">Potential Matches</h4>
+            {% if matches %}
+                <div class="list-group">
+                {% for match in matches %}
+                    <a href="{{ url_for('matches.match_details', match_id=match._id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <span>Match Score: <strong>{{ match.match_score }}%</strong> ({{ match.match_level }})</span>
+                        <span class="badge bg-primary rounded-pill">View Match</span>
+                    </a>
+                {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    No potential matches found yet. The system will notify you when a match is found.
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Claim Item</h4>
+            </div>
+            <div class="card-body p-4">
+                <div class="alert alert-info">
+                    You are claiming that the found item belongs to you. Please provide verification details to help the admin or finder confirm your ownership.
+                </div>
+                
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Verification Message <span class="text-danger">*</span></label>
+                        <textarea name="message" class="form-control" rows="5" required placeholder="Describe something specific about the item that only the owner would know. E.g., 'There is a scratch on the bottom left corner.' or 'It contains my library card.'"></textarea>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('matches.match_details', match_id=match._id) }}" class="btn btn-light">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Submit Claim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

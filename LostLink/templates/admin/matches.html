@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">All Matches</h2>
+<div class="card shadow-sm"><div class="card-body">
+    <table class="table table-hover">
+        <thead><tr><th>Match Score</th><th>Level</th><th>Status</th><th>Created</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for m in matches %}
+            <tr>
+                <td><strong>{{ m.match_score }}%</strong></td><td>{{ m.match_level }}</td>
+                <td><span class="badge bg-secondary">{{ m.status }}</span></td>
+                <td>{{ m.created_at.strftime('%Y-%m-%d') }}</td>
+                <td><a href="{{ url_for('matches.match_details', match_id=m._id) }}" class="btn btn-sm btn-primary">View</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% endblock %}
