@@ -1,7 +1,9 @@
+
 from flask import Flask, render_template
 from config import Config
 from database.mongo import init_db
 import os
+
 
 def create_app():
     app = Flask(__name__)
@@ -43,6 +45,10 @@ def create_app():
 
     return app
 
+
+# Vercel needs this Flask instance at the top level
+app = create_app()
+
+
 if __name__ == '__main__':
-    app = create_app()
     app.run(debug=True, port=5000)
